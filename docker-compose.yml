@@ -1,0 +1,71 @@
+version: "3.1"
+services:
+    db:
+        image: mysql
+        ports:
+            - "3306:3306"
+        command:
+            - --SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))
+            - --default-authentication-plugin=mysql_native_password
+        environment:
+            MYSQL_DATABASE: mydb
+            MYSQL_USER: ${DB_USER}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+        volumes:
+            - ./dump:/docker-entrypoint-initdb.d
+            - ./conf:/etc/mysql/conf.d
+            - persistent:/var/lib/mysql
+        networks:
+            - default
+        restart: unless-stopped
+
+    postgres:
+        container_name: postgres_container
+        image: postgres:latest
+        environment:
+            POSTGRES_USER: ${DB_USER}
+            POSTGRES_PASSWORD: ${DB_PASSWORD}
+            PGDATA: /data/postgres
+        volumes:
+            - postgres:/data/postgres
+        ports:
+            - "5432:5432"
+        networks:
+            - postgres
+        restart: unless-stopped
+
+    pgadmin:
+        container_name: pgadmin_container
+        image: dpage/pgadmin4:latest
+        environment:
+            PGADMIN_DEFAULT_EMAIL: ${EMAIL}
+            PGADMIN_DEFAULT_PASSWORD: ${PASSWORD}
+        volumes:
+            - pgadmin:/root/.pgadmin
+        ports:
+            - "8082:80"
+        networks:
+            - postgres
+        restart: unless-stopped
+
+    mongodb_container:
+        image: mongo:latest
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
+            MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
+        ports:
+            - 27017:27017
+        volumes:
+            - mongodb_data_container:/data/db
+        restart: unless-stopped
+
+networks:
+  postgres:
+    driver: bridge
+
+volumes:
+    persistent:
+    postgres:
+    pgadmin:
+    mongodb_data_container:
