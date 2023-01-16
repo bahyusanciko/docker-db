@@ -5,8 +5,9 @@ services:
         ports:
             - "3306:3306"
         command:
-            - --SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''))
+            - --sql_mode=
             - --default-authentication-plugin=mysql_native_password
+            - --innodb_strict_mode=OFF
         environment:
             MYSQL_DATABASE: mydb
             MYSQL_USER: ${DB_USER}
