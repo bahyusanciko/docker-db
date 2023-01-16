@@ -1,10 +1,7 @@
-# docker-lamp
+# docker-db
 
-Docker example with Apache, MySql, PhpMyAdmin and PHP
 
-- You can use MariaDB if you checkout to the tag `mariadb:{version}`
 - You can use MySql if you checkout to the tag `mysql:{version}`
-- You change version PHP if you checkout to the tag `php:{version}-apache`
 
 I use docker-compose as an orchestrator. To run these containers:
 
