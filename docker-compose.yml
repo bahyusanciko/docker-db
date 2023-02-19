@@ -1,7 +1,7 @@
-version: "3.1"
+version: "3.9"
 services:
     db:
-        image: mysql
+        image: mysql:${VERSION_MYSQL}
         ports:
             - "3306:3306"
         command:
@@ -15,7 +15,6 @@ services:
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
         volumes:
             - ./dump:/docker-entrypoint-initdb.d
-            - ./conf:/etc/mysql/conf.d
             - persistent:/var/lib/mysql
         networks:
             - default
@@ -23,7 +22,7 @@ services:
 
     postgres:
         container_name: postgres_container
-        image: postgres:latest
+        image: postgres:${VERSION_POSTGRES}
         environment:
             POSTGRES_USER: ${DB_USER}
             POSTGRES_PASSWORD: ${DB_PASSWORD}
@@ -38,7 +37,7 @@ services:
 
     pgadmin:
         container_name: pgadmin_container
-        image: dpage/pgadmin4:latest
+        image: dpage/pgadmin4:${VERSION_PGADMIN}
         environment:
             PGADMIN_DEFAULT_EMAIL: ${EMAIL}
             PGADMIN_DEFAULT_PASSWORD: ${PASSWORD}
@@ -51,7 +50,7 @@ services:
         restart: unless-stopped
 
     mongodb_container:
-        image: mongo:latest
+        image: mongo:${VERSION_PGADMIN}
         environment:
             MONGO_INITDB_ROOT_USERNAME: ${DB_USER}
             MONGO_INITDB_ROOT_PASSWORD: ${DB_PASSWORD}
